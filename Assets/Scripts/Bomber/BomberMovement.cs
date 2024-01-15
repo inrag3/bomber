@@ -2,16 +2,19 @@ using Infrastructure;
 using Services.Input;
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(CharacterController), typeof(Animator))]
 public class BomberMovement : MonoBehaviour
 {
     [SerializeField] private float _speed;
+    [SerializeField] private Animator _animator;
     private CharacterController _controller;
     private IInputService _inputService;
     private UnityEngine.Camera _camera;
+    private static readonly int Running = Animator.StringToHash("Running");
 
     private void Awake()
     {
+        _animator = GetComponent<Animator>();
         _controller = GetComponent<CharacterController>();
         _inputService = Game.InputService;
     }
@@ -36,12 +39,14 @@ public class BomberMovement : MonoBehaviour
             {
                 movement.x = 0f;
             }
-
             movement.Normalize();
+            
             transform.forward = movement;
         }
-
+        
         movement += Physics.gravity;
         _controller.Move(_speed * UnityEngine.Time.deltaTime * movement);
+        
+        _animator.SetFloat(Running, _controller.velocity.magnitude, 0.1f, Time.deltaTime);
     }
 }
