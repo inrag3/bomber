@@ -546,7 +546,7 @@ MonoBehaviour:
   _leftTop: {fileID: 1366829327}
   _width: 25
   _height: 13
-  _frequency: 0.235
+  _frequency: 0.2
   _border: {fileID: 2945581096133867859, guid: d710b5c33f244fb469da6fa91071a1aa, type: 3}
   _stone: {fileID: 4987353973883882478, guid: 0082a8843894b504c8cf36caced56a09, type: 3}
   _box: {fileID: 2659868970987450002, guid: 0f0a3280f8cb946d382277d6dfaf6bf1, type: 3}
