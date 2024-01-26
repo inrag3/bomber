@@ -22,15 +22,10 @@ public class Enemy : Creature, IPoolable, IObservable<Enemy>
         _target = FindObjectOfType<Bomber>();
     }
 
-    private IEnumerator Start()
+    private void LateUpdate()
     {
-        while (true)
-        {
-            yield return new WaitForSeconds(0.5f);
-            SetTarget(_target);
-        }
+        SetTarget(_target);
     }
-    
     
     protected override void OnDied()
     {
