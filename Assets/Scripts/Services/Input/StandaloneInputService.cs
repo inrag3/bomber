@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Services.Input
 {
@@ -7,5 +8,4 @@ namespace Services.Input
         public override Vector2 Axis =>
             new(UnityEngine.Input.GetAxis(Horizontal), UnityEngine.Input.GetAxis(Vertical));
     }
-    
 }

@@ -4,7 +4,7 @@
 public class Point : MonoBehaviour
 {
     public float X => transform.position.x;
-    public float Y => transform.position.z;
+    public float Z => transform.position.z;
     
     private void OnDrawGizmos()
     {

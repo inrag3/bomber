@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Services.Input
 {
@@ -7,8 +8,5 @@ namespace Services.Input
         protected const string Horizontal = "Horizontal";
         protected const string Vertical = "Vertical";
         public abstract Vector2 Axis { get; }
-        
-        
-        
     }
 }

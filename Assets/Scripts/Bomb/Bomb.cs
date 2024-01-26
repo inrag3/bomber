@@ -1,31 +1,39 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using Pool;
+using UnityEngine;
 
-
-// Player -> Instantiate Bomb -> (Как получить информацию о том, как дамажить других?)
 [RequireComponent(typeof(BoxCollider))]
-public class Bomb : MonoBehaviour
+public class Bomb : MonoBehaviour, IObservable<Bomb>, IPoolable
 {
-    [SerializeField] private LayerMask _layerMask;
-    [SerializeField] private int _damage = 50;
-    [SerializeField] private int _range = 3;
     [SerializeField] private float _lifeTime = 3f;
-    
-    private const string Bomber = "Bomber";    
-
+    private event Action<Bomb> Exploded;
+    private const string Bomber = "Bomber";
     private BoxCollider _collider;
-    
+
     private void Awake()
     {
         _collider = GetComponent<BoxCollider>();
     }
 
-    private void Start()
+    public void Place(Vector3 position)
     {
-        Destroy(gameObject, _lifeTime);
-        //Запуск какой-то анимации
+        transform.position = position;
+        StartCoroutine(Explode());
+    }
+
+    private IEnumerator Explode()
+    {
+        yield return new WaitForSeconds(_lifeTime);
+        Notify(this);
+    }
+
+    public void Reload()
+    {
+        _collider.isTrigger = true;
+        RemoveAllObservers();
     }
     
-    // TODO вынести детекцию в отдельный компонент
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag(Bomber))
@@ -34,28 +42,14 @@ public class Bomb : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
-    {
-        //Нужно какой-то explosion реализовать
-        var colliders = new Collider[6];
-        var size = Physics.OverlapSphereNonAlloc(transform.position, 1.5f, colliders, _layerMask);
-        print(size);
-        for (var i = 0; i < size; i++)
-        {
-            if (!colliders[i].TryGetComponent(out IDamageable damageable)) //Если нет в _layerMask IDamageable
-                continue;
-            damageable.TakeDamage(_damage);
-        }
-    }
-    
-#if UNITY_EDITOR
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireSphere(transform.position, 1.5f);
-    }
-#endif
-    
+    private void RemoveAllObservers() => 
+        Exploded = null;
+    public void AddObserver(IObserver<Bomb> observer) => 
+        Exploded += observer.OnUpdate;
+
+    public void RemoveObserver(IObserver<Bomb> observer) => 
+        Exploded -= observer.OnUpdate;
+
+    public void Notify(Bomb bomb) =>
+        Exploded?.Invoke(bomb);
 }
-
-
-

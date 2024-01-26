@@ -1,13 +1,19 @@
-﻿public interface IObservable
+﻿using System;
+using UnityEngine;
+public interface IObservable
 {
-    public void AddObserver(Observer observer);
-    public void RemoveObserver(Observer observer);
+    public void AddObserver(IObserver observer);
+    public void RemoveObserver(IObserver observer);
     public void Notify();
 }
 
 public interface IObservable<T>
 {
-    public void AddObserver(Observer<T> observer);
-    public void RemoveObserver(Observer<T> observer);
-    public void Notify();
+    public void AddObserver(IObserver<T> observer);
+    public void RemoveObserver(IObserver<T> observer);
+    public void Notify(T value);
 }
+
+
+
+
